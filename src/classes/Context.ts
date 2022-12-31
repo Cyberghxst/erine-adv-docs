@@ -1,17 +1,23 @@
+import { BaseParam } from "@types";
 import { CommandInteraction, Message, User, TextBasedChannel, GuildMember, APIInteractionGuildMember, Guild, MessagePayload, MessageCreateOptions, InteractionReplyOptions, InteractionResponse, ClientUser } from "discord.js";
+import { ErineClient } from "./Base";
 
 class Context {
     private data: CommandInteraction | Message
-    public type: "PREFIX" | "HYBRID" | "SLASH"
-    constructor(data: CommandInteraction | Message, type: "PREFIX" | "HYBRID" | "SLASH" = "PREFIX") {
+    public args: string[] | null
+    public bot: ErineClient
+    public params: BaseParam[] | null
+    constructor(data: CommandInteraction | Message, bot: ErineClient) {
         this.data = data
-        this.type = type
+        this.bot = bot
+        this.args = this.data instanceof Message ? []: null
+        this.params = this.data instanceof Message ? []: null
     }
     get message(): Message | null {
         return this.data instanceof Message ? this.data: null
     }
     get interaction(): CommandInteraction | null {
-        return this.data instanceof CommandInteraction ? this.data: null
+        return this.data instanceof Message ? null: this.data
     }
     get author(): User {
         return this.data instanceof Message ? this.data.author: this.data.user
@@ -23,11 +29,7 @@ class Context {
         return this.data.member
     }
     get guild(): Guild | null {
-        return this.guild
-    }
-
-    get bot(): ClientUser {
-        return this.bot
+        return this.data.guild
     }
 
     async send(options: string | MessagePayload | MessageCreateOptions | InteractionReplyOptions): Promise<Message | null> {
@@ -43,6 +45,12 @@ class Context {
     async defer(options?: { ephemeral?: boolean }): Promise<void | InteractionResponse> {
         if(this.data instanceof Message) return this.data.channel.sendTyping()
         else return this.data.deferReply({ ephemeral: !!options?.ephemeral })
+    }
+
+    get<T>(param: string, defaultValue: any = null): T {
+        // @ts-ignore
+        if(this.data instanceof Message) return this.params?.find(p => p.name.toLowerCase() === param.toLowerCase())?.value || defaultValue
+        else return this.data.options.get(param)?.value || defaultValue
     }
 }
 

@@ -1,17 +1,23 @@
 import { Awaitable, BitFieldResolvable, ClientOptions, Snowflake, Client, ClientEvents, Message, User, TextChannel, GuildMember, Guild, CommandInteraction, Collection, SlashCommandBuilder } from "discord.js";
 import { PrefixBuilder } from "src/classes/PrefixBuilder";
+import { HybridBuilder } from "src/classes/HybridBuilder";
 import { Context } from "src/classes/Context";
+import { on } from "events";
+import { ParamsBuilder } from "src/classes/ParamsBuilder";
 
 export class ErineClient extends Client {
     constructor(options: ErineOptions)
+    public on<K extends keyof ErineEvents>(event: K, listener: (...args: ErineEvents[K]) => Awaitable<void>): this;
+    public on<S extends string | symbol>(event: Exclude<S, keyof ErineEvents>, listener: (...args: any[]) => Awaitable<void>): this;
 }
 
 interface ErineEvents extends ClientEvents {
-    contextError: [ctx: any]
+    contextError: [ctx: Context]
 }
 
 export interface ErineOptions extends ClientOptions {
-    prefix: string | Awaitable<string>
+    prefix: string | CallableFunction
+    guildOnly?: boolean
     owners?: Snowflake[]
 }
 
@@ -25,25 +31,25 @@ export interface ErineCollected {
     SlashType: Collection<string, Command<'SlashType'>> | null
 }
 
-export interface Event<T> {
+export interface Event {
     name: keyof ErineEvents
-    code: (nature: T) => Promise<void>
+    code: (...args) => Promise<any>
 }
 
 export interface CommandStructures {
     PrefixType: {
         data: PrefixBuilder
-        type: 'PREFIX' | 'HYBRID' | 'SLASH'
+        params?: ParamsBuilder
         code: (ctx: Context) => Promise<void>
     }
     HybridType: {
-        data: PrefixBuilder | SlashCommandBuilder
-        type: 'PREFIX' | 'HYBRID' | 'SLASH'
+        data: HybridBuilder
+        params?: ParamsBuilder
         code: (ctx: Context) => Promise<void>
     }
     SlashType: {
         data: SlashCommandBuilder
-        type: 'PREFIX' | 'HYBRID' | 'SLASH'
+        params?: ParamsBuilder
         code: (ctx: Context) => Promise<void>
     }
 }
@@ -52,6 +58,21 @@ export enum Types {
     Prefix = 'PrefixType',
     Hybrid = 'HybridType',
     Slash = 'SlashType'
+}
+
+export interface BaseParam {
+    name: string
+    description: string
+    required: boolean
+    type?: ApplicationCommandOptionType
+    value?: any
+    long?: boolean
+}
+
+declare global {
+    interface ClientEvents {
+        contextError: [ctx: any]
+    }
 }
 
 export type Command<K extends keyof CommandStructures = 'PrefixType'> = CommandStructures[K]
