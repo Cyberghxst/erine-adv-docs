@@ -1,7 +1,7 @@
 import { ErineClient } from "./classes/Base";
-import { PrefixBuilder } from "./classes/PrefixBuilder";
-import { HybridBuilder } from "./classes/HybridBuilder";
-import { ParamsBuilder } from "./classes/ParamsBuilder";
+import { PrefixBuilder } from "./classes/builders/PrefixBuilder";
+import { HybridBuilder } from "./classes/builders/HybridBuilder";
+import { ParamsBuilder } from "./classes/builders/ParamsBuilder";
 import { Plugins } from "./classes/Core";
 import * as Errors from "./classes/Errors"
 

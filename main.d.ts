@@ -1,9 +1,10 @@
 import { Awaitable, BitFieldResolvable, ClientOptions, Snowflake, Client, ClientEvents, Message, User, TextChannel, GuildMember, Guild, CommandInteraction, Collection, SlashCommandBuilder } from "discord.js";
-import { PrefixBuilder } from "src/classes/PrefixBuilder";
-import { HybridBuilder } from "src/classes/HybridBuilder";
+import { PrefixBuilder } from "src/classes/builders/PrefixBuilder";
+import { HybridBuilder } from "src/classes/builders/HybridBuilder";
 import { Context } from "src/classes/Context";
 import { on } from "events";
-import { ParamsBuilder } from "src/classes/ParamsBuilder";
+import { ParamsBuilder } from "src/classes/builders/ParamsBuilder";
+import { HybridGroup } from "src/classes/builders/HybridGroupBuilder";
 
 export class ErineClient extends Client {
     constructor(options: ErineOptions)
@@ -29,6 +30,7 @@ export interface ErineCollected {
     PrefixType: Collection<string, Command> | null
     HybridType: Collection<string, Command<'HybridType'>> | null
     SlashType: Collection<string, Command<'SlashType'>> | null
+    HybridGroupType: Collection<string, Command<'HybridGroupType'>> | null
 }
 
 export interface Event {
@@ -56,11 +58,15 @@ export interface CommandStructures {
         params?: ParamsBuilder
         code: (ctx: Context) => Promise<void>
     }
+    HybridGroupType: {
+        data: HybridGroup
+    }
 }
 
 export enum Types {
     Prefix = 'PrefixType',
     Hybrid = 'HybridType',
+    HybridGroup = 'HybridGroupType',
     Slash = 'SlashType'
 }
 
