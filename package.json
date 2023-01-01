@@ -9,5 +9,23 @@
     "discord.js": "^14.7.1",
     "tiny-typed-emitter": "^2.1.0",
     "tslib": "^2.4.1"
-  }
+  },
+  "name": "erine",
+  "description": "wasau",
+  "version": "1.0.0",
+  "main": "core/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cyberghxst/Erine.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Cyberghxst/Erine/issues"
+  },
+  "homepage": "https://github.com/Cyberghxst/Erine#readme"
 }
