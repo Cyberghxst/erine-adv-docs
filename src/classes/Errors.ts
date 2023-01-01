@@ -58,6 +58,15 @@ class NotParamNumber {
     }
 }
 
+class NotParamBoolean {
+    public ctx: Context
+    public param: BaseParam
+    constructor(context: Context, param: BaseParam) {
+        this.ctx = context
+        this.param = param
+    }
+}
+
 class InvalidParamChoice {
     public ctx: Context
     public param: BaseParam
@@ -86,5 +95,6 @@ export {
     MissingRequiredParam,
     NotParamNumber,
     InvalidParamChoice,
-    MissingPermission
+    MissingPermission,
+    NotParamBoolean
 }

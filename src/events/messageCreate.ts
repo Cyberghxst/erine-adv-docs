@@ -77,6 +77,7 @@ async function LoadHybridGroup(ctx: Context, hybrid_group: Command<Types.HybridG
     if(!probably) return
     let sub = hybrid_group.data.commands?.find(c => c.data.name.toLowerCase() == probably || c.data.aliases.includes(probably!))
     if(!sub) return
+    ctx.parent = hybrid_group
     LoadHybridCommand(ctx, sub!, args).catch(e => ctx.bot.emit('contextError', new Errors.UnknownCommandError(new Context(ctx.message!, ctx.bot), e)))
 }
 

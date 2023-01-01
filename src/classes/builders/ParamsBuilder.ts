@@ -32,4 +32,9 @@ export class ParamsBuilder {
         this.params.push(param)
         return this
     }
+    addBoolean(param: BaseParam): ParamsBuilder {
+        param.type = ApplicationCommandOptionType.Boolean
+        this.params.push(param)
+        return this
+    }
 }

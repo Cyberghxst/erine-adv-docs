@@ -1,4 +1,4 @@
-import { BaseParam } from "@types";
+import { BaseParam, Command, Types } from "@types";
 import { CommandInteraction, Message, User, TextBasedChannel, GuildMember, APIInteractionGuildMember, Guild, MessagePayload, MessageCreateOptions, InteractionReplyOptions, InteractionResponse, ClientUser } from "discord.js";
 import { ErineClient } from "./Base";
 
@@ -7,11 +7,13 @@ class Context {
     public args: string[] | null
     public bot: ErineClient
     public params: BaseParam[] | null
+    public parent: Command<Types.HybridGroup> | null
     constructor(data: CommandInteraction | Message, bot: ErineClient) {
         this.data = data
         this.bot = bot
         this.args = this.data instanceof Message ? []: null
         this.params = this.data instanceof Message ? []: null
+        this.parent = null
     }
     get message(): Message | null {
         return this.data instanceof Message ? this.data: null

@@ -15,8 +15,7 @@ class Coreback {
         return func(obj)
     }
     convertParamType(input: string, param: BaseParam, ctx: Context) {
-        if(!input) return { break: false, value: null }
-        
+        if(!input) return { break: false, value: null }  
         if(param.choices?.length) {
             let found = param.choices.find(x => x.name.toLowerCase() == input.toLowerCase())
             if(!found) { ctx.bot.emit('contextError', new Errors.InvalidParamChoice(ctx, param, param.choices)); return { break: true, value: null } }
@@ -27,6 +26,11 @@ class Coreback {
             let n = Number(input)
             if(isNaN(n)) { ctx.bot.emit('contextError', new Errors.NotParamNumber(ctx, param)); return { break: true, value: null } }
             else return { break: false, value: Number(input) }
+        }
+        else if(param.type === ApplicationCommandOptionType.Boolean) {
+            let b = input === 'false' ? false: input === 'true' ? true: null
+            if(b === null) { ctx.bot.emit('contextError', new Errors.NotParamBoolean(ctx, param)); return { break: true, value: null } }
+            else return { break: false, value: b }
         }
         return { break: false, value: null }
     }
