@@ -2,6 +2,7 @@
 
 import { BaseParam, ErineClient } from "@types";
 import { ApplicationCommandOptionType, Guild, GuildMember, PermissionResolvable } from "discord.js";
+import { ChannelParam } from "./builders/ParamsBuilder";
 import { Context } from "./Context";
 import * as Errors from "./Errors"
 
@@ -58,7 +59,10 @@ class Coreback {
         } else if(param.type === ApplicationCommandOptionType.Channel) {
             let b = await this.getChannel(input, ctx.guild)
             if(!b) { ctx.bot.emit('contextError', new Errors.InvalidParamChannel(ctx, param)) }
-            else return { break: false, value: b }
+            else {
+                if((param as ChannelParam).channel_types && !(param as ChannelParam).channel_types!.includes(b!.type)) { ctx.bot.emit('contextError', new Errors.InvalidChannelType(ctx, param, b!.type, (param as ChannelParam).channel_types)); return { break: true, value: null }}
+                return { break: false, value: b }
+            }
         } else if(param.type === ApplicationCommandOptionType.Role) {
             let b = await this.getRole(input, ctx.guild!)
             if(!b) { ctx.bot.emit('contextError', new Errors.InvalidParamRole(ctx, param)); return { break: true, value: null } }

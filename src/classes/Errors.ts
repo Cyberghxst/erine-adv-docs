@@ -1,6 +1,7 @@
 import { BaseParam } from "@types";
-import { PermissionResolvable } from "discord.js";
+import { ChannelType, PermissionResolvable } from "discord.js";
 import { Context } from "../classes/Context";
+import { ChannelParam } from "./builders/ParamsBuilder";
 
 class GuildOnly {
     public ctx: Context
@@ -105,6 +106,19 @@ class InvalidParamRole {
     }
 }
 
+class InvalidChannelType {
+    public ctx: Context
+    public param: ChannelParam
+    public provided: ChannelType
+    public expected: ChannelType[]
+    constructor(context: Context, param: ChannelParam, provided: ChannelType, expected: ChannelType[]) {
+        this.ctx = context
+        this.param = param
+        this.provided = provided
+        this.expected = expected
+    }
+}
+
 class MissingPermission {
     public ctx: Context
     public permission: PermissionResolvable
@@ -126,5 +140,6 @@ export {
     NotParamBoolean,
     InvalidParamMember,
     InvalidParamChannel,
-    InvalidParamRole
+    InvalidParamRole,
+    InvalidChannelType
 }
