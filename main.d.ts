@@ -36,15 +36,19 @@ export interface Event {
     code: (...args) => Promise<any>
 }
 
+export type Plugin = AsyncFunction<Context, boolean> | SyncFunction<Context, boolean> | Promise<(ctx: Context) => Promise<boolean>>
+
 export interface CommandStructures {
     PrefixType: {
         data: PrefixBuilder
         params?: ParamsBuilder
+        plugins?: Plugin[]
         code: (ctx: Context) => Promise<void>
     }
     HybridType: {
         data: HybridBuilder
         params?: ParamsBuilder
+        plugins?: Plugin[]
         code: (ctx: Context) => Promise<void>
     }
     SlashType: {
@@ -68,6 +72,9 @@ export interface BaseParam {
     value?: any
     long?: boolean
 }
+
+export type AsyncFunction<S, T> = (args: S) => Promise<T>
+export type SyncFunction<S, T> = (args: S) => T
 
 declare global {
     interface ClientEvents {
