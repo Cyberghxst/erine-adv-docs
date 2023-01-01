@@ -78,6 +78,33 @@ class InvalidParamChoice {
     }
 }
 
+class InvalidParamMember {
+    public ctx: Context
+    public param: BaseParam
+    constructor(context: Context, param: BaseParam) {
+        this.ctx = context
+        this.param = param
+    }
+}
+
+class InvalidParamChannel {
+    public ctx: Context
+    public param: BaseParam
+    constructor(context: Context, param: BaseParam) {
+        this.ctx = context
+        this.param = param
+    }
+}
+
+class InvalidParamRole {
+    public ctx: Context
+    public param: BaseParam
+    constructor(context: Context, param: BaseParam) {
+        this.ctx = context
+        this.param = param
+    }
+}
+
 class MissingPermission {
     public ctx: Context
     public permission: PermissionResolvable
@@ -96,5 +123,8 @@ export {
     NotParamNumber,
     InvalidParamChoice,
     MissingPermission,
-    NotParamBoolean
+    NotParamBoolean,
+    InvalidParamMember,
+    InvalidParamChannel,
+    InvalidParamRole
 }

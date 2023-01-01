@@ -7,6 +7,7 @@ import * as Errors from "../classes/Errors";
 
 async function LoadPrefixCommand(ctx: Context, prefix_command: Command<Types.Prefix>, args: string[]) {
     if(!prefix_command) return
+    ctx.command = prefix_command
     if(prefix_command.plugins) {
         for(const plugin of prefix_command.plugins) {
             if(isPromise(plugin)) {
@@ -22,7 +23,7 @@ async function LoadPrefixCommand(ctx: Context, prefix_command: Command<Types.Pre
             if(missing) return ctx.bot.emit('contextError', new Errors.MissingRequiredParam(ctx, missing))
             let types = prefix_command.params.params.map(x => x.type)
             for(let i = 0; i < types.length; i++) {
-                let parsed = ctx.bot.coreback.convertParamType(args[i], prefix_command.params.params[i], ctx)
+                let parsed = await ctx.bot.coreback.convertParamType(args[i], prefix_command.params.params[i], ctx)
                 if(parsed?.break) return
                 if(prefix_command.params.params[i].long) prefix_command.params.params[i].value = args.slice(i).join(' ')
                 else prefix_command.params.params[i].value = parsed?.value
@@ -40,6 +41,7 @@ async function LoadPrefixCommand(ctx: Context, prefix_command: Command<Types.Pre
 
 async function LoadHybridCommand(ctx: Context, hybrid_command: Command<Types.Hybrid>, args: string[]) {
     if(!hybrid_command) return
+    ctx.command = hybrid_command
     if(hybrid_command.plugins) {
         for(const plugin of hybrid_command.plugins) {
             if(isPromise(plugin)) {
@@ -55,7 +57,7 @@ async function LoadHybridCommand(ctx: Context, hybrid_command: Command<Types.Hyb
             if(missing) return ctx.bot.emit('contextError', new Errors.MissingRequiredParam(ctx, missing))
             let types = hybrid_command.params.params.map(x => x.type)
             for(let i = 0; i < types.length; i++) {
-                let parsed = ctx.bot.coreback.convertParamType(args[i], hybrid_command.params.params[i], ctx)
+                let parsed = await ctx.bot.coreback.convertParamType(args[i], hybrid_command.params.params[i], ctx)
                 if(parsed?.break) return
                 if(hybrid_command.params.params[i].long) hybrid_command.params.params[i].value = args.slice(i).join(' ')
                 else hybrid_command.params.params[i].value = parsed?.value
@@ -77,6 +79,7 @@ async function LoadHybridGroup(ctx: Context, hybrid_group: Command<Types.HybridG
     if(!probably) return
     let sub = hybrid_group.data.commands?.find(c => c.data.name.toLowerCase() == probably || c.data.aliases.includes(probably!))
     if(!sub) return
+    ctx.command = sub
     ctx.parent = hybrid_group
     LoadHybridCommand(ctx, sub!, args).catch(e => ctx.bot.emit('contextError', new Errors.UnknownCommandError(new Context(ctx.message!, ctx.bot), e)))
 }
@@ -102,8 +105,8 @@ const event: Event = {
         let hybrid_group = bot.skyfold.commands.HybridGroupType?.find(c => c.data.name.toLocaleLowerCase() == probably)
         if(!prefix_command && !hybrid_command && !hybrid_group) return bot.emit('contextError', new Errors.CommandNotFound(ctx, probably))
         LoadHybridGroup(ctx, hybrid_group!, args).catch(e => bot.emit('contextError', new Errors.UnknownCommandError(ctx, e)))
-        LoadHybridCommand(ctx, hybrid_command!, args).catch(e => bot.emit('contextError', new Errors.UnknownCommandError(ctx, e)))
-        LoadPrefixCommand(ctx, prefix_command!, args).catch(e => bot.emit('contextError', new Errors.UnknownCommandError(ctx, e)))
+        LoadHybridCommand(new Context(message, bot), hybrid_command!, args).catch(e => bot.emit('contextError', new Errors.UnknownCommandError(ctx, e)))
+        LoadPrefixCommand(new Context(message, bot), prefix_command!, args).catch(e => bot.emit('contextError', new Errors.UnknownCommandError(ctx, e)))
     }
 }
 

@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType } from "discord.js";
+import { ApplicationCommandOptionType, ChannelType } from "discord.js";
 import { BaseParam } from "@types";
 
 export interface StringParam extends BaseParam {
@@ -11,6 +11,10 @@ export interface NumberParam extends BaseParam {
     max_value?: number
     min_value?: number
     choices?: { name: string, value: string }[]
+}
+
+export interface ChannelParam extends BaseParam {
+    channel_types?: ChannelType[]
 }
 
 export class ParamsBuilder {
@@ -34,6 +38,21 @@ export class ParamsBuilder {
     }
     addBoolean(param: BaseParam): ParamsBuilder {
         param.type = ApplicationCommandOptionType.Boolean
+        this.params.push(param)
+        return this
+    }
+    addMember(param: BaseParam): ParamsBuilder {
+        param.type = ApplicationCommandOptionType.User
+        this.params.push(param)
+        return this
+    }
+    addChannel(param: ChannelParam): ParamsBuilder {
+        param.type = ApplicationCommandOptionType.Channel
+        this.params.push(param)
+        return this
+    }
+    addRole(param: BaseParam): ParamsBuilder {
+        param.type = ApplicationCommandOptionType.Role
         this.params.push(param)
         return this
     }
