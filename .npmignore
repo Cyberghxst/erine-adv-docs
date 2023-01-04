@@ -1,0 +1,10 @@
+src
+node_modules
+tsconfig.json
+package-lock.json
+.replit
+replit.nix
+.build
+.cache
+.config
+.upm

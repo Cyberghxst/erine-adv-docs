@@ -1,3 +1,5 @@
 core
 node_modules
 src/tests
+package-lock.json
+replit.nix
