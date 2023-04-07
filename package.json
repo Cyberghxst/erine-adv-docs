@@ -1,0 +1,20 @@
+{
+  "name": "erine",
+  "version": "3.0.0",
+  "description": "A OceanicJS-based command framework to create your Discord bots with ease.",
+  "main": "core/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Cyberghxst",
+  "license": "ISC",
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.3"
+  },
+  "dependencies": {
+    "@oceanicjs/builders": "^1.1.7",
+    "oceanic.js": "^1.6.0"
+  }
+}
