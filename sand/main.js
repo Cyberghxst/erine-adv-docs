@@ -1,1 +1,16 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Event = exports.Command = exports.ParamsBuilder = exports.GroupBuilder = exports.Erine = exports.CommandBuilder = void 0;
+const Bot_1 = require("./classes/Bot");
+Object.defineProperty(exports, "Erine", { enumerable: true, get: function () { return Bot_1.Erine; } });
+const CommandBuilder_1 = require("./classes/builders/CommandBuilder");
+Object.defineProperty(exports, "CommandBuilder", { enumerable: true, get: function () { return CommandBuilder_1.CommandBuilder; } });
+const ParamsBuilder_1 = require("./classes/builders/ParamsBuilder");
+Object.defineProperty(exports, "ParamsBuilder", { enumerable: true, get: function () { return ParamsBuilder_1.ParamsBuilder; } });
+const GroupBuilder_1 = require("./classes/builders/GroupBuilder");
+Object.defineProperty(exports, "GroupBuilder", { enumerable: true, get: function () { return GroupBuilder_1.GroupBuilder; } });
+const Command_1 = require("./classes/Command");
+Object.defineProperty(exports, "Command", { enumerable: true, get: function () { return Command_1.Command; } });
+const Event_1 = require("./classes/Event");
+Object.defineProperty(exports, "Event", { enumerable: true, get: function () { return Event_1.Event; } });
+exports.default = { CommandBuilder: CommandBuilder_1.CommandBuilder, Erine: Bot_1.Erine, GroupBuilder: GroupBuilder_1.GroupBuilder, ParamsBuilder: ParamsBuilder_1.ParamsBuilder, Command: Command_1.Command, Event: Event_1.Event };

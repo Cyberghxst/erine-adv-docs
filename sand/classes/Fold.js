@@ -5,8 +5,7 @@ const path_1 = require("path");
 const process_1 = require("process");
 const fs_1 = require("fs");
 const oceanic_js_1 = require("oceanic.js");
-class Command {
-}
+const main_1 = require("../main");
 class Fold {
     data = { universal: new oceanic_js_1.Collection(), group: new oceanic_js_1.Collection() };
     client;
@@ -24,7 +23,17 @@ class Fold {
             const MODULE = require((0, path_1.join)((0, process_1.cwd)(), dir, file))?.data;
             if (!MODULE)
                 continue;
-            if (MODULE instanceof Command) { }
+            if (MODULE instanceof main_1.Command) {
+                this.data.universal.set(MODULE.name, MODULE);
+            }
+        }
+    }
+    async sync(guildId = '') {
+        if (!guildId) {
+            const parsed = [];
+            await this.client.application.bulkEditGlobalCommands(parsed);
+        }
+        else {
         }
     }
 }

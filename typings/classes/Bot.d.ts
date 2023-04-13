@@ -4,6 +4,6 @@ export interface SetupOptions extends ClientOptions {
     owners?: string[];
     guildOnly?: boolean;
 }
-export declare class ErineClient extends Client {
+export declare class Erine extends Client {
     constructor(options: SetupOptions);
 }
