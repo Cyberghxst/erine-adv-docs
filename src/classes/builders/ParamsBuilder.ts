@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionTypes, ChannelTypes } from 'oceanic.js';
+import { ApplicationCommandOptionTypes, ChannelTypes } from '../../main';
 
 export class ParamsBuilder {
     strings: StringParam[]

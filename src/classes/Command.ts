@@ -1,4 +1,4 @@
-import { Erine, CommandBuilder, ParamsBuilder, Plugin } from "../main";
+import { Erine, CommandBuilder, ParamsBuilder, Plugin, Group } from "../main";
 
 export interface CommandOptions {
     data: CommandBuilder
@@ -10,11 +10,12 @@ export class Command {
     public bot: Erine
     public options?: CommandOptions
     public name: string
+    public plugins: Plugin[]
     public aliases: string[]
     public description: string
     public withPrefix: boolean
     public withSlash: boolean
-    public parent: any
+    public parent: Group | null
     constructor(bot: Erine, options?: CommandOptions) {
         this.bot = bot
         this.options = options
@@ -24,6 +25,7 @@ export class Command {
         this.withPrefix = options?.data?.as_prefix ?? true
         this.withSlash = options?.data?.as_slash ?? true
         this.parent = null
+        this.plugins = options?.plugins || []
     }
     async code(ctx: any): Promise<any> {
         console.log("Command executed: ", this.name);

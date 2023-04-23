@@ -1,6 +1,4 @@
-import { BaseParam, ChannelParam } from '../main';
-import { Channel, ChannelTypes, PermissionName } from 'oceanic.js';
-import { Context } from '../main';
+import { BaseParam, ChannelParam, Context, Channel, ChannelTypes, PermissionName } from '../main';
 
 class GuildOnly {
     public ctx: Context
@@ -203,7 +201,17 @@ class CommandInCooldown {
     }
 }
 
+class InvalidParam {
+    public ctx: Context
+    public metadata: Record<string, any>
+    constructor(context: Context, metadata: Record<string, any>) {
+        this.ctx = context
+        this.metadata = metadata
+    }
+}
+
 export {
+    InvalidParam,
     GuildOnly,
     NotOwner,
     CommandNotFound,

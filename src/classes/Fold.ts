@@ -1,8 +1,7 @@
 import { join } from 'path';
 import { cwd } from 'process';
 import { lstatSync, readdirSync } from 'fs';
-import { Collection } from 'oceanic.js';
-import { CommandBuilder, Command, Event, Erine } from '../main';
+import { Collection, CommandBuilder, Command, Event, Erine } from '../main';
 
 export interface FoldCollections {
     universal: Collection<string, Command>
@@ -17,23 +16,21 @@ export class Fold {
     }
     async load(dir: string): Promise<void> {
         const files = readdirSync(join(cwd(), dir));
-        for (const file of files) {
+        for(const file of files) {
             let stat = lstatSync(join(cwd(), dir, file));
-            if (stat.isDirectory()) { this.load(join(dir, file)); continue; }
+            if(stat.isDirectory()) { this.load(join(dir, file)); continue; }
             const MODULE = require(join(cwd(), dir, file))?.data;
-            if (!MODULE || !this.client.core.isClass(MODULE)) continue;
+            if(!MODULE || !this.client.core.isClass(MODULE)) continue;
             const CLS = new MODULE(this.client)
-            if (CLS instanceof Command) {
+            if(CLS instanceof Command) {
                 this.data.universal.set(CLS.name, MODULE)
             } else if(CLS instanceof Event) {
-                CLS.run().then(() => {
-                    // nose
-                }).catch(e => console.log(e))
+                CLS.run().then(this.client.core.noop).catch(console.log)
             }
         }
     }
-    async sync (guildId: string = ''): Promise<void> {
-        if (!guildId) {
+    async sync(guildId: string = ''): Promise<void> {
+        if(!guildId) {
             // Global cmds sync
             const parsed: any[] = [];
             await this.client.application.bulkEditGlobalCommands(parsed);

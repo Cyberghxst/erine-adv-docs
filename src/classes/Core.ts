@@ -1,5 +1,4 @@
-import { Erine, BaseParam, Context, ChannelParam, Errors } from "../main";
-import { AnyChannel, Guild, Role, User, ApplicationCommandOptionTypes } from 'oceanic.js';
+import { Erine, BaseParam, Context, ChannelParam, Errors, AnyChannel, Guild, Role, User, ApplicationCommandOptionTypes } from "../main";
 
 export class Core {
     public readonly bot: Erine
