@@ -1,4 +1,4 @@
-import { Erine, BaseParam, Context, ChannelParam, Errors, AnyChannel, Guild, Role, User, ApplicationCommandOptionTypes } from "../main";
+import { Erine, BaseParam, Context, ChannelParam, Errors, AnyChannel, Guild, Role, ApplicationCommandOptionTypes } from "../main";
 
 export class Core {
     public readonly bot: Erine
@@ -39,6 +39,14 @@ export class Core {
         return role || null
     }
     async transform(input: string, param: BaseParam, ctx: Context, seeable = true) {
+        if(!input && seeable) return { break: false, value: null }
+        // @ts-ignore
+        let choices = param.choices as { name: string, value: string }[]
+        if(choices?.length) {
+            let found = choices.find(x => x.name.toLowerCase() == input.toLowerCase())
+            if(!found) { ctx.bot.emit("commandError", new Errors.InvalidParamChoice(ctx, param, choices)); return { break: true, value: null } }
+            else return { break: false, value: found.value }
+        }
         if(param.type === ApplicationCommandOptionTypes.STRING) return { break: false, value: input }
         else if(param.type === ApplicationCommandOptionTypes.NUMBER) {
             if(isNaN(Number(input))) { ctx.bot.emit("commandError", new Errors.InvalidParamNumber(ctx, param)); return { break: true, value: null } }

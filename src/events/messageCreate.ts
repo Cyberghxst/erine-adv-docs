@@ -1,16 +1,35 @@
-import { Event, Erine, Message, Context, Command, Group, ApplicationCommandOptionTypes, Errors } from "../main";
-import { isAsyncFunction, isPromise } from "util/types";
+import { Event, Context, Maker, Errors, Message, CommandObject, ApplicationCommandOptionTypes } from "../main";
+import { isPromise, isAsyncFunction } from "util/types";
 
-class messageCreate extends Event {
-    constructor(bot: Erine) {
-        super(bot)
+class MessageHandler extends Maker {
+    @Event
+    async messageCreate(message: Message) {
+        if(message.author.bot) return
+        let ctx = this.bot.getContext(message)
+        if(this.bot.ops.guildOnly && !message.guild) return this.bot.emit("commandError", new Errors.GuildOnly(ctx))
+        let prefix: string;
+        if(typeof this.bot.ops.prefix === 'string') prefix = this.bot.ops.prefix
+        else {
+            if(isAsyncFunction(this.bot.ops.prefix)) prefix = await this.bot.ops.prefix(ctx)
+            else prefix = this.bot.ops.prefix(ctx) as string
+        }
+        if(!prefix) return;
+        if(!message.content.toLowerCase().startsWith(prefix.toLowerCase())) return
+        let args = this.splitArgs(message.content.slice(prefix.length).trim())
+        let argsForSub: string[] = args.slice(1)
+        let probably = args.shift()?.toLowerCase()
+        if(!probably) return
+        let command = this.bot.fold.getAllCommands().find(c => (c.name.toLowerCase() == probably || c.aliases.includes(probably!) && c.allowed.includes("prefix")))
+        let subcommand = this.bot.fold.getAllCommands().find(c => c.group && c.group.name.toLowerCase() == probably && c.name == argsForSub[0]?.toLowerCase() && c.allowed.includes("prefix")) || this.bot.fold.getAllCommands().find(c => c.group && c.group.name == probably && c.group.fallback && c.allowed.includes("prefix"))
+        if(command) this.runCommand(ctx, command, args).catch(e => this.bot.emit("commandError", new Errors.UnknownCommandError(ctx, e)))
+        if(subcommand) this.runCommand(ctx, subcommand, subcommand.group!.fallback && subcommand.name !== argsForSub[0]?.toLowerCase() ? argsForSub: argsForSub.slice(1)).catch(e => this.bot.emit("commandError", new Errors.UnknownCommandError(ctx, e)))
     }
-    async code(message: Message): Promise<void> {
-        
-    }
-    private async loadCommand(ctx: Context, command: Command, args: string[]) {
+
+    async runCommand(ctx: Context, command: CommandObject, args: string[]) {
+        if(!command) return
         ctx.command = command
-        if(command.plugins) {
+        ctx.parent = command.group || null
+        if(command.plugins.length) {
             for(const plugin of command.plugins) {
                 if(isPromise(plugin)) {
                     if(!(await (await plugin)(ctx))) return
@@ -19,42 +38,31 @@ class messageCreate extends Event {
                 }
             }
         }
-        if(command.options?.params) {
-            let missing = command.options.params.params?.filter(x => x.type != ApplicationCommandOptionTypes.ATTACHMENT)?.find((x, i) => !args[i] && x.required)
-            if(missing) return ctx.bot.emit("commandError", new Errors.MissingRequiredParam(ctx, missing))
-            let types = command.options.params.params.map(x => x.type)
+        if(command.params.length) {
+            let missing = command.params.filter(x => x.type != ApplicationCommandOptionTypes.ATTACHMENT)?.find((x, i) => !args[i] && x.required)
+            if(missing) return this.bot.emit("commandError", new Errors.MissingRequiredParam(ctx, missing))
+            let types = command.params.map(x => x.type)
             let argi = 0
             for(let i = 0; i < types.length; i++) {
                 let parsed
-                if(types[i] === ApplicationCommandOptionTypes.ATTACHMENT) { parsed = await ctx.bot.core.transform("", command.options.params.params[i], ctx, false); argi--}
-                else parsed = await ctx.bot.core.transform(args[argi], command.options.params.params[i], ctx)
+                if(types[i] === ApplicationCommandOptionTypes.ATTACHMENT) { parsed = await ctx.bot.core.transform("", command.params[i], ctx, false); argi--}
+                else parsed = await ctx.bot.core.transform(args[argi], command.params[i], ctx)
                 if(parsed?.break) return
-                if(command.options.params.params[i]?.long) command.options.params.params[i].value = args.slice(i).join(' ')
-                else command.options.params.params[i].value = parsed?.value
+                if(command.params[i]?.ellipsis) command.params[i].value = args.slice(i).join(' ')
+                else command.params[i].value = parsed?.value
                 argi++
             }
-            ctx.params = command.options.params.params
+            ctx.params = command.params
         }
         ctx.args = args
         try {
-            if(command) command.code(ctx).catch(e => ctx.bot.emit("commandError", new Errors.UnknownCommandError(ctx, e)))
+            command.maker[command.key](ctx).catch((e: any) => this.bot.emit("commandError", new Errors.UnknownCommandError(ctx, e)))
         } catch(e) {
-            ctx.bot.emit("commandError", new Errors.UnknownCommandError(ctx, e))
+            this.bot.emit("commandError", new Errors.UnknownCommandError(ctx, e))
         }
     }
-    private loadGroup(ctx: Context, group: Group, args: string[]) {
-        const [all, probably] = [args || [], args?.shift()?.toLowerCase()]
-        let sub = probably ? group.commands?.find(c => (c.name.toLowerCase() == probably || c.aliases.includes(probably!)) && c.withPrefix): null
-        if(sub) {
-            ctx.command = sub
-            ctx.parent = group
-            this.loadCommand(ctx, sub!, args).catch(e => ctx.bot.emit("commandError", new Errors.UnknownCommandError(new Context(ctx.bot, ctx.message!), e)))
-        } else {
-            let fall = group.fallback
-            if(fall) this.loadCommand(ctx, fall, all)
-        }
-    }
-    private splitArgs(text: string) {
+
+    splitArgs(text: string) {
         const regex = /("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|[\S]+)/g;
         const args = [];
         let match;
@@ -66,4 +74,4 @@ class messageCreate extends Event {
       }
 }
 
-export const data = messageCreate
+export const data = MessageHandler

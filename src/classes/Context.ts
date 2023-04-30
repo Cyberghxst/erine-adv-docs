@@ -1,11 +1,11 @@
-import { Erine, Command, Group, BaseParam, InitialInteractionContent, CommandInteraction, CreateMessageOptions, Guild, Member, Message, User, AnyTextChannelWithoutGroup } from '../main';
+import { Erine, CommandObject, GroupObject, BaseParam, InitialInteractionContent, CommandInteraction, CreateMessageOptions, Guild, Member, Message, User, AnyTextChannelWithoutGroup } from '../main';
 
 export class Context {
     public bot: Erine
     public data: CommandInteraction | Message
-    public command: Command | null
+    public command: CommandObject | null
     public params: BaseParam[] | null
-    public parent: Group | null
+    public parent: GroupObject | null
     public args: string[] | null
     constructor(bot: Erine, data: CommandInteraction | Message) {
         this.bot = bot
@@ -54,9 +54,14 @@ export class Context {
     get<T>(param: string, defaultValue: any = null): T | null {
         if(this.data instanceof Message) return this.params?.find(p => p.name.toLowerCase() === param.toLowerCase())?.value || defaultValue;
         else {
-            let found = this.data['data'].options.raw.find(s => s.name === param.toLowerCase());
-            if(!found) return null;
-            return this.data['data'].options.getAttachment(param.toLowerCase()) || this.data['data'].options.getMember(param.toLowerCase()) || this.data['data'].options.getChannel(param.toLowerCase()) || this.data['data'].options.getRole(param.toLowerCase()) || defaultValue;
+            return this.data['data'].options.getAttachment(param.toLowerCase()) ??
+            this.data['data'].options.getMember(param.toLowerCase()) ??
+            this.data['data'].options.getChannel(param.toLowerCase()) ??
+            this.data['data'].options.getRole(param.toLowerCase()) ??
+            this.data['data'].options.getNumber(param.toLowerCase()) ??
+            this.data['data'].options.getBoolean(param.toLowerCase()) ??
+            this.data['data'].options.getString(param.toLowerCase()) ??
+            defaultValue;
         }
     }
-} // sexualmente hablando me encantas
+}

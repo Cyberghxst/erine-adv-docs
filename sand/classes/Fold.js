@@ -4,11 +4,10 @@ exports.Fold = void 0;
 const path_1 = require("path");
 const process_1 = require("process");
 const fs_1 = require("fs");
-const oceanic_js_1 = require("oceanic.js");
 const main_1 = require("../main");
 class Fold {
-    data = { universal: new oceanic_js_1.Collection(), group: new oceanic_js_1.Collection() };
     client;
+    makers = [];
     constructor(client) {
         this.client = client;
     }
@@ -21,20 +20,54 @@ class Fold {
                 continue;
             }
             const MODULE = require((0, path_1.join)((0, process_1.cwd)(), dir, file))?.data;
-            if (!MODULE)
+            if (!MODULE || !this.client.core.isClass(MODULE))
                 continue;
-            if (MODULE instanceof main_1.Command) {
-                this.data.universal.set(MODULE.name, MODULE);
-            }
+            const CLS = new MODULE(this.client);
+            if (CLS instanceof main_1.Maker)
+                this.makers.push(CLS.__start__());
         }
     }
-    async sync(guildId = '') {
-        if (!guildId) {
-            const parsed = [];
-            await this.client.application.bulkEditGlobalCommands(parsed);
+    getAllCommands() {
+        return this.makers.map(m => m.__getCommands__()).reduce((a, b) => a.concat(b));
+    }
+    async sync() {
+        let ingroup = this.getAllCommands().filter(c => c.group && c.group.name);
+        let withoutgroup = this.getAllCommands().filter(c => !c.group?.name);
+        let parsed = [];
+        if (withoutgroup.length) {
+            withoutgroup.forEach(x => {
+                if (!x.allowed.includes("slash"))
+                    return;
+                let obj = { ...x };
+                obj.options = x.params;
+                parsed.push(obj);
+            });
         }
-        else {
+        if (ingroup.length) {
+            ingroup.forEach(x => {
+                if (!x.allowed.includes("slash"))
+                    return;
+                let g = x.group;
+                let obj = { ...g, isgroup: true };
+                let i = parsed.findIndex(o => o.name == obj.name && o.isgroup);
+                if (i > -1) {
+                    if (!parsed[i].options)
+                        parsed[i].options = [];
+                    let nn = { ...x };
+                    nn.type = 1;
+                    nn.options = x.params;
+                    parsed[i].options.push(nn);
+                }
+                else {
+                    let nn = { ...x };
+                    nn.type = 1;
+                    nn.options = x.params;
+                    obj.options = [nn];
+                    parsed.push(obj);
+                }
+            });
         }
+        await this.client.application.bulkEditGlobalCommands(parsed);
     }
 }
 exports.Fold = Fold;

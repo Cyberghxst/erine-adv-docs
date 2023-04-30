@@ -1,10 +1,12 @@
-import { Client, ClientOptions, ClientEvents, CommandInteraction, Message, Events, Fold, Core, Context } from "../main"
+import { Events, Fold, Core, Context } from "../main"
+import { Client, ClientOptions, CommandInteraction, Message } from "oceanic.js"
 
 export interface SetupOptions extends ClientOptions {
     prefix: string | ((ctx: any) => Promise<string> | string)
     owners?: string[]
     guildOnly?: boolean
     context?: typeof Context
+    autoSync?: boolean
 }
 
 export class Erine extends Client<Events>{ 
@@ -27,4 +29,10 @@ export class Erine extends Client<Events>{
     async load(dir: string): Promise<void> {
         this.fold.load(dir);
     }
+    async connect() {
+        await this.fold.load("./sand/events")
+        if(this.ops.autoSync) await this.fold.sync()
+        await super.connect()
+    }
+
 }
