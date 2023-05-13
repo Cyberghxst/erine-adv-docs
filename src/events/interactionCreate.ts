@@ -1,5 +1,6 @@
-import { Event, Context, Interaction, Maker, InteractionTypes, CommandInteraction, Errors } from "../main";
+import { Event, Context, Interaction, InteractionTypes, CommandInteraction, Errors } from "../main";
 import { isPromise } from "util/types";
+import { Maker } from "../classes/Maker";
 
 class InteractionHandler extends Maker {
     @Event

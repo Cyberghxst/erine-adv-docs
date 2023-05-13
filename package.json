@@ -1,8 +1,9 @@
 {
   "name": "erine",
-  "version": "3.0.0",
+  "version": "3.0.11-dev",
   "description": "A OceanicJS-based command framework to create your Discord bots with ease.",
-  "main": "core/main.js",
+  "types": "sand/main.d.ts",
+  "main": "sand/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,6 +16,7 @@
   },
   "dependencies": {
     "@oceanicjs/builders": "^1.1.7",
+    "oceanic-collectors": "^1.0.7",
     "oceanic.js": "^1.6.0",
     "tslib": "^2.5.0"
   }

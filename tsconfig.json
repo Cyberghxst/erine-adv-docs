@@ -6,7 +6,6 @@
       "outDir": "./sand/",
       "strict": true,
       "declaration": true,
-      "declarationDir": "./typings",
       "composite": true,
       "moduleResolution": "node",
       "importHelpers": true,

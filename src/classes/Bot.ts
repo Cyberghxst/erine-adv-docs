@@ -1,5 +1,6 @@
-import { Events, Fold, Core, Context } from "../main"
-import { Client, ClientOptions, CommandInteraction, Message } from "oceanic.js"
+import { Events, Fold, Core, Context } from "../main";
+import { Client, ClientOptions, CommandInteraction, Message } from "oceanic.js";
+import { join } from "path";
 
 export interface SetupOptions extends ClientOptions {
     prefix: string | ((ctx: any) => Promise<string> | string)
@@ -11,7 +12,7 @@ export interface SetupOptions extends ClientOptions {
 
 export class Erine extends Client<Events>{ 
     /**
-     * Setup the bot class with options
+     * Setup the bot class with options.
      */
     public readonly ops: SetupOptions;
     public core: Core;
@@ -26,11 +27,11 @@ export class Erine extends Client<Events>{
     getContext(data: CommandInteraction | Message) {
         return new (this.ops.context || Context)(this, data)
     }
-    async load(dir: string): Promise<void> {
-        this.fold.load(dir);
+    async load(dir: string, providingCwd?: boolean): Promise<void> {
+        await this.fold.load(dir, providingCwd);
     }
     async connect() {
-        await this.fold.load("./sand/events")
+        await this.load(join(__dirname, "..", "events"), true)
         if(this.ops.autoSync) await this.fold.sync()
         await super.connect()
     }

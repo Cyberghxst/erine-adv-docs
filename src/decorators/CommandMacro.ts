@@ -10,12 +10,14 @@ export interface CommandOptions {
 export function Command(options: CommandOptions) {
     return function(target: any, key: string, descriptor: PropertyDescriptor) {
         descriptor.value!.__builder__ = {}
-        descriptor.value.__allowed__ = ["prefix", "slash"]
+        descriptor.value.__allowed__ = []
         for(const property of Object.keys(options)) {
             descriptor.value.__builder__[property] = options[property as keyof CommandOptions]
         }
         if(!descriptor.value.__builder__.description) descriptor.value.__builder__.description = "..."
         descriptor.value.__type__ = "command"
         if(!descriptor.value.__builder__.name) descriptor.value.__builder__.name = key.toLowerCase()
+        if(options.prefix !== false) descriptor.value.__allowed__.push("prefix")
+        if(options.slash !== false) descriptor.value.__allowed__.push("slash")
     }
 }

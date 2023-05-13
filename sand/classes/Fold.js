@@ -11,15 +11,17 @@ class Fold {
     constructor(client) {
         this.client = client;
     }
-    async load(dir) {
-        const files = (0, fs_1.readdirSync)((0, path_1.join)((0, process_1.cwd)(), dir));
+    async load(dir, withCwd) {
+        const files = (0, fs_1.readdirSync)((0, path_1.join)(!withCwd ? (0, process_1.cwd)() : "", dir));
         for (const file of files) {
-            let stat = (0, fs_1.lstatSync)((0, path_1.join)((0, process_1.cwd)(), dir, file));
+            let stat = (0, fs_1.lstatSync)((0, path_1.join)(!withCwd ? (0, process_1.cwd)() : "", dir, file));
             if (stat.isDirectory()) {
                 this.load((0, path_1.join)(dir, file));
                 continue;
             }
-            const MODULE = require((0, path_1.join)((0, process_1.cwd)(), dir, file))?.data;
+            if (file.endsWith(".d.ts"))
+                continue;
+            const MODULE = require((0, path_1.join)(!withCwd ? (0, process_1.cwd)() : "", dir, file))?.data;
             if (!MODULE || !this.client.core.isClass(MODULE))
                 continue;
             const CLS = new MODULE(this.client);

@@ -9,12 +9,13 @@ export class Fold {
     constructor(client: Erine) {
         this.client = client
     }
-    async load(dir: string): Promise<void> {
-        const files = readdirSync(join(cwd(), dir));
+    async load(dir: string, withCwd?: boolean): Promise<void> {
+        const files = readdirSync(join(!withCwd ? cwd(): "", dir));
         for(const file of files) {
-            let stat = lstatSync(join(cwd(), dir, file));
+            let stat = lstatSync(join(!withCwd ? cwd(): "", dir, file));
             if(stat.isDirectory()) { this.load(join(dir, file)); continue }
-            const MODULE = require(join(cwd(), dir, file))?.data
+            if(file.endsWith(".d.ts")) continue
+            const MODULE = require(join(!withCwd ? cwd(): "", dir, file))?.data
             if(!MODULE || !this.client.core.isClass(MODULE)) continue;
             const CLS = new MODULE(this.client)
             if(CLS instanceof Maker) this.makers.push(CLS.__start__())

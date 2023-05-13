@@ -1,7 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Maker = exports.ParamType = exports.Param = exports.Plugins = exports.Errors = exports.Context = exports.Group = exports.Core = exports.Event = exports.Command = exports.Fold = exports.Erine = exports.Bucket = void 0;
+exports.ParamType = exports.Param = exports.Plugins = exports.Errors = exports.Context = exports.Group = exports.Core = exports.Event = exports.Command = exports.Fold = exports.Erine = exports.Maker = exports.Collectors = exports.Builders = exports.Bucket = void 0;
 const tslib_1 = require("tslib");
+const Collectors = tslib_1.__importStar(require("oceanic-collectors"));
+exports.Collectors = Collectors;
+const Builders = tslib_1.__importStar(require("@oceanicjs/builders"));
+exports.Builders = Builders;
 const Bot_1 = require("./classes/Bot");
 Object.defineProperty(exports, "Erine", { enumerable: true, get: function () { return Bot_1.Erine; } });
 const CommandMacro_1 = require("./decorators/CommandMacro");
@@ -33,4 +37,4 @@ var Bucket;
     Bucket["Channel"] = "CHANNEL";
 })(Bucket = exports.Bucket || (exports.Bucket = {}));
 tslib_1.__exportStar(require("oceanic.js"), exports);
-exports.default = { Erine: Bot_1.Erine, Fold: Fold_1.Fold, Command: CommandMacro_1.Command, Event: EventMacro_1.Event, Core: Core_1.Core, Group: GroupMacro_1.Group, Context: Context_1.Context, Errors, Plugins, Maker: Maker_1.Maker };
+exports.default = { Builders, Collectors, Erine: Bot_1.Erine, Fold: Fold_1.Fold, Command: CommandMacro_1.Command, Event: EventMacro_1.Event, Core: Core_1.Core, Group: GroupMacro_1.Group, Context: Context_1.Context, Errors, Plugins, Maker: Maker_1.Maker };

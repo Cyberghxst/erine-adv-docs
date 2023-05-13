@@ -1,5 +1,6 @@
-import { Event, Context, Maker, Errors, Message, CommandObject, ApplicationCommandOptionTypes } from "../main";
+import { Event, Context, Errors, Message, CommandObject, ApplicationCommandOptionTypes } from "../main";
 import { isPromise, isAsyncFunction } from "util/types";
+import { Maker } from "../classes/Maker";
 
 class MessageHandler extends Maker {
     @Event
