@@ -5,6 +5,9 @@ const main_1 = require("../main");
 const oceanic_js_1 = require("oceanic.js");
 const path_1 = require("path");
 class Erine extends oceanic_js_1.Client {
+    /**
+     * Setup the bot class with options.
+     */
     ops;
     core;
     fold;

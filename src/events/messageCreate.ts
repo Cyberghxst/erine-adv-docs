@@ -21,7 +21,7 @@ class MessageHandler extends Maker {
         let probably = args.shift()?.toLowerCase()
         if(!probably) return
         let command = this.bot.fold.getAllCommands().find(c => (c.name.toLowerCase() == probably || c.aliases.includes(probably!) && c.allowed.includes("prefix")))
-        let subcommand = this.bot.fold.getAllCommands().find(c => c.group && c.group.name.toLowerCase() == probably && c.name == argsForSub[0]?.toLowerCase() && c.allowed.includes("prefix")) || this.bot.fold.getAllCommands().find(c => c.group && c.group.name == probably && c.group.fallback && c.allowed.includes("prefix"))
+        let subcommand = this.bot.fold.getAllCommands().find(c => c.group && (c.group.name.toLowerCase() == probably || c.group.aliases?.map(s=>s.toLowerCase())?.includes(probably!)) && (c.name == argsForSub[0]?.toLowerCase() || c.aliases.map(s=>s.toLowerCase()).includes(argsForSub[0]?.toLowerCase())) && c.allowed.includes("prefix")) || this.bot.fold.getAllCommands().find(c => c.group && (c.group.name == probably || c.group.aliases?.map(s=>s.toLowerCase())?.includes(probably!)) && c.group.fallback && c.allowed.includes("prefix"))
         if(command) this.runCommand(ctx, command, args).catch(e => this.bot.emit("commandError", new Errors.UnknownCommandError(ctx, e)))
         if(subcommand) this.runCommand(ctx, subcommand, subcommand.group!.fallback && subcommand.name !== argsForSub[0]?.toLowerCase() ? argsForSub: argsForSub.slice(1)).catch(e => this.bot.emit("commandError", new Errors.UnknownCommandError(ctx, e)))
     }

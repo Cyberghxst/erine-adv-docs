@@ -1,7 +1,7 @@
 {
   "name": "erine",
-  "version": "3.0.11-dev",
-  "description": "A OceanicJS-based command framework to create your Discord bots with ease.",
+  "version": "3.1.0-dev",
+  "description": "An advanced OceanicJS-based command framework to create your Discord bots with ease.",
   "types": "sand/main.d.ts",
   "main": "sand/main.js",
   "scripts": {

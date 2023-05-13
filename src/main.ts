@@ -23,6 +23,7 @@ export interface GroupObject {
     name: string
     description?: string
     usage?: string
+    aliases?: string[]
     fallback?: boolean
 }
 
