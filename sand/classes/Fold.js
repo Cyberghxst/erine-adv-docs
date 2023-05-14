@@ -30,7 +30,28 @@ class Fold {
         }
     }
     getAllCommands() {
-        return this.makers.map(m => m.__getCommands__()).reduce((a, b) => a.concat(b));
+        try {
+            return this.makers.map(m => m.__getCommands__()).reduce((a, b) => a.concat(b));
+        }
+        catch {
+            return [];
+        }
+    }
+    getAllInteractions() {
+        try {
+            return this.makers.map(m => m.__getInteractions__()).reduce((a, b) => a.concat(b));
+        }
+        catch {
+            return [];
+        }
+    }
+    getAllContexts() {
+        try {
+            return this.makers.map(m => m.__getContexts__()).reduce((a, b) => a.concat(b));
+        }
+        catch {
+            return [];
+        }
     }
     async sync() {
         let ingroup = this.getAllCommands().filter(c => c.group && c.group.name);
@@ -69,7 +90,7 @@ class Fold {
                 }
             });
         }
-        await this.client.application.bulkEditGlobalCommands(parsed);
+        await this.client.application.bulkEditGlobalCommands(parsed.concat(this.getAllContexts()));
     }
 }
 exports.Fold = Fold;

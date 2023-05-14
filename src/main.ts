@@ -1,9 +1,11 @@
-import { ClientEvents } from 'oceanic.js';
+import { ApplicationCommandTypes, ClientEvents } from 'oceanic.js';
 import * as Collectors from 'oceanic-collectors'
 import * as Builders from '@oceanicjs/builders'
 import { Erine } from './classes/Bot';
 import { Command } from './decorators/CommandMacro';
 import { Group } from './decorators/GroupMacro';
+import { Dispatch } from './decorators/InteractionMacro';
+import { ContextMenu } from './decorators/ContextMenuMacro';
 import { Event } from './decorators/EventMacro';
 import { Core } from './classes/Core';
 import { Context } from './classes/Context';
@@ -39,6 +41,17 @@ export interface CommandObject {
     maker: any
 }
 
+export interface InteractionObject {
+    id: string
+    maker: any
+}
+
+export interface ContextMenuObject {
+    name: string
+    type: ApplicationCommandTypes
+    maker: any
+}
+
 export enum Bucket {
     Member = "MEMBER",
     User = "USER",
@@ -51,5 +64,5 @@ export type SyncFunction<S, T> = (args: S) => T
 export type Plugin = AsyncFunction<Context, boolean> | SyncFunction<Context, boolean> | Promise<(ctx: Context) => Promise<boolean>>
 
 export * from 'oceanic.js';
-export { Builders, Collectors, Maker, BaseParam, ChannelParam, NumberParam, StringParam, Erine, Fold, Command, Event, Core, Group, Context, Errors, Plugins, Param, TypeOfParam, ParamType }
-export default { Builders, Collectors, Erine, Fold, Command, Event, Core, Group, Context, Errors, Plugins, Maker }
+export { Builders, Collectors, Maker, BaseParam, ChannelParam, NumberParam, StringParam, Erine, Fold, Command, Dispatch, ContextMenu, Event, Core, Group, Context, Errors, Plugins, Param, TypeOfParam, ParamType }
+export default { Builders, Collectors, Erine, Fold, Command, Dispatch, ContextMenu, Event, Core, Group, Context, Errors, Plugins, Maker }

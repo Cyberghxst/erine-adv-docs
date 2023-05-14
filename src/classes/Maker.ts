@@ -1,11 +1,15 @@
-import { Erine, Events, CommandObject } from "../main";
+import { Erine, Events, CommandObject, InteractionObject, ContextMenuObject } from "../main";
 
 export class Maker {
     public bot: Erine
     public commands: CommandObject[]
+    public interactions: InteractionObject[]
+    public contexts: ContextMenuObject[]
     constructor(bot: Erine) {
         this.bot = bot
         this.commands = []
+        this.interactions = []
+        this.contexts = []
     }
     __start__() {
         for(const key of Object.getOwnPropertyNames(Object.getPrototypeOf(this))) {
@@ -29,12 +33,21 @@ export class Maker {
                 this.commands.push(COMMAND)
             } else if(descriptor.value.__type__ === "event") {
                 this.bot.on(key as keyof Events, (...args) => descriptor.value.call(this, ...args))
+            } else if(descriptor.value.__type__ === "interaction") {
+                this.interactions.push({ id: key, maker: this })
+            } else if(descriptor.value.__type__ === "context") {
+                this.contexts.push({ name: key, type: descriptor.value.__component__, maker: this })
             }
         }
-        if(this.bot.ops.autoSync) this.bot.fold.sync()
         return this
     }
     __getCommands__() {
         return this.commands
+    }
+    __getInteractions__() {
+        return this.interactions
+    }
+    __getContexts__() {
+        return this.contexts
     }
 }
