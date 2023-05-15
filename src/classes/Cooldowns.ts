@@ -1,11 +1,5 @@
 import { Collection, Erine, Bucket } from '../main';
 
-interface CooldownData {
-    command: string
-    time: number
-    bucket: Bucket
-}
-
 export class Cooldowns {
     bot: Erine
     track: Collection<string, number> = new Collection()

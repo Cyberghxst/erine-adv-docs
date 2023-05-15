@@ -9,6 +9,11 @@ export class Fold {
     constructor(client: Erine) {
         this.client = client
     }
+    /**
+     * Loads a Maker directory
+     * @param dir The directory that contains the Makers
+     * @param withCwd If the provided directory contains the home path 'process.cwd()'
+     */
     async load(dir: string, withCwd?: boolean): Promise<void> {
         const files = readdirSync(join(!withCwd ? cwd(): "", dir));
         for(const file of files) {
@@ -21,6 +26,10 @@ export class Fold {
             if(CLS instanceof Maker) this.makers.push(CLS.__start__())
         }
     }
+    /**
+     * Get all makers commands into a single array
+     * @returns An array of CommandObject
+     */
     getAllCommands() {
         try {
             return this.makers.map(m => m.__getCommands__()).reduce((a, b) => a.concat(b))
@@ -28,6 +37,10 @@ export class Fold {
             return []
         }
     }
+    /**
+     * Get all makers interactions into a single array 
+     * @returns An array of InteractionObject
+     */
     getAllInteractions() {
         try {
             return this.makers.map(m => m.__getInteractions__()).reduce((a, b) => a.concat(b))
@@ -35,6 +48,10 @@ export class Fold {
             return []
         }
     }
+    /**
+     * Get all makers context menus into a single array
+     * @returns An array of ContextMenuObject
+     */
     getAllContexts() {
         try {
             return this.makers.map(m => m.__getContexts__()).reduce((a, b) => a.concat(b))
@@ -42,6 +59,9 @@ export class Fold {
             return []
         }
     }
+    /**
+     * Uploads the application commands (slashes and context menus) to the discord API
+     */
     async sync(): Promise<void> {
         let ingroup = this.getAllCommands().filter(c => c.group && c.group.name)
         let withoutgroup = this.getAllCommands().filter(c => !c.group?.name)

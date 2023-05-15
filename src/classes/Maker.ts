@@ -11,6 +11,9 @@ export class Maker {
         this.interactions = []
         this.contexts = []
     }
+    /**
+     * Add all commands, interactions, events and context menus to the cache in this maker
+     */
     __start__() {
         for(const key of Object.getOwnPropertyNames(Object.getPrototypeOf(this))) {
             const descriptor = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this), key)

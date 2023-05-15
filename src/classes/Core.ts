@@ -11,9 +11,19 @@ export class Core {
     getClassOf(fn: any) {
         return fn.constructor.name;
     }
+    /**
+     * Equivalent to '(...args) => null', used to bypass errors
+     * @returns 
+     */
     noop() {
         return null
-    } 
+    }
+    /**
+     * Get a member from a string
+     * @param query The possible member: ID, Mention, Partial Username, Username 
+     * @param options guild is the way to get the member, force is if the bot should try to fetch it if it is not in cache
+     * @returns The found member (if any)
+     */
     async getMember(query: string, options: {guild: Guild, force?: boolean }) {
         if(!query) return null
         let some_id = query.replace(/[^\d]/g, '')
@@ -22,6 +32,12 @@ export class Core {
         if(!member && some_id && options.force) member = await options.guild.getMember(some_id)
         return member
     }
+    /**
+     * Get a channel from a string
+     * @param query The possible channel: ID, Mention, Partial Name, Name
+     * @param options guild is the way to get the channel, force is if the bot should try to fetch it if it is not in cache
+     * @returns The found channel (if any)
+     */
     async getChannel(query: string, options: { guild: Guild, force?: boolean }) {
         if(!query) return null
         let some_id = query.replace(/[^\d]/g, '')
@@ -30,6 +46,12 @@ export class Core {
         if(!channel && some_id && options.force) channel = await this.bot.rest.request<AnyChannel>({ method: "GET", path: `/channels/${some_id}` }).catch(this.noop)
         return channel
     }
+    /**
+     * Get a role from a string
+     * @param query The possible role: ID, Mention, Partial Name, Name
+     * @param options guild is the way to get the channel, force is if the bot should try to fetch it if its not in cache
+     * @returns The found role (if any)
+     */
     async getRole(query: string, options: { guild: Guild, force?: boolean }) {
         if(!query) return null
         let some_id = query.replace(/[^\d]/g, '')
@@ -38,6 +60,14 @@ export class Core {
         if(!role && options.force && some_id) role = await this.bot.rest.request<Role>({ method: "GET", path: `/guilds/${options.guild.id}/roles/${some_id}` }).catch(this.noop)
         return role || null
     }
+    /**
+     * Parse an argument to return a parameter value
+     * @param input The argument string
+     * @param param The Parameter type (BaseParam object or extended)
+     * @param ctx The Context to use
+     * @param seeable If the argument can be get from the command execution string-arguments, or not (i.e. attachments)
+     * @returns The converted value (if possible)
+     */
     async transform(input: string, param: BaseParam, ctx: Context, seeable = true) {
         if(!input && seeable) return { break: false, value: null }
         // @ts-ignore

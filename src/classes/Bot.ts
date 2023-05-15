@@ -24,16 +24,29 @@ export class Erine extends Client<Events>{
         this.core = new Core(this)
         
     }
+    /**
+     * 
+     * @param {CommandInteraction | Message} data The iterator to create the Context 
+     * @returns The Context class initializated
+     */
     getContext(data: CommandInteraction | Message) {
         return new (this.ops.context || Context)(this, data)
     }
+    /**
+     * 
+     * @param {string} dir The directory with the Makers 
+     * @param {boolean} providingCwd If the directory already contains the home directory 'process.cwd()' 
+     */
     async load(dir: string, providingCwd?: boolean): Promise<void> {
         await this.fold.load(dir, providingCwd);
     }
+    /**
+     * Starts the erine client
+     */
     async connect() {
         await this.load(join(__dirname, "..", "events"), true)
-        if(this.ops.autoSync) await this.fold.sync()
         await super.connect()
+        if(this.ops.autoSync) await this.fold.sync()
     }
 
 }
