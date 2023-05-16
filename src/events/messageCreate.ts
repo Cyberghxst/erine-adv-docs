@@ -15,6 +15,7 @@ class MessageHandler extends Maker {
             else prefix = this.bot.ops.prefix(ctx) as string
         }
         if(!prefix) return;
+        ctx.prefix = prefix
         if(!message.content.toLowerCase().startsWith(prefix.toLowerCase())) return
         let args = this.splitArgs(message.content.slice(prefix.length).trim())
         let argsForSub: string[] = args.slice(1)

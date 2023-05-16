@@ -1,4 +1,4 @@
-import { Events, Fold, Core, Context } from "../main";
+import { Events, Fold, Core, Context, HelpCommand } from "../main";
 import { Client, ClientOptions, CommandInteraction, Message } from "oceanic.js";
 import { join } from "path";
 
@@ -6,6 +6,7 @@ export interface SetupOptions extends ClientOptions {
     prefix: string | ((ctx: any) => Promise<string> | string)
     owners?: string[]
     guildOnly?: boolean
+    helpCommand?: typeof HelpCommand
     context?: typeof Context
     autoSync?: boolean
 }
@@ -44,7 +45,8 @@ export class Erine extends Client<Events>{
      * Starts the erine client
      */
     async connect() {
-        await this.load(join(__dirname, "..", "events"), true)
+        await this.load(join(__dirname, "..", "events"), true);
+        if(this.ops.helpCommand) this.fold.makers.push((new this.ops.helpCommand(this)).__start__())
         await super.connect()
         if(this.ops.autoSync) await this.fold.sync()
     }

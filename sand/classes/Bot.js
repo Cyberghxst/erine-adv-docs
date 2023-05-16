@@ -38,6 +38,8 @@ class Erine extends oceanic_js_1.Client {
      */
     async connect() {
         await this.load((0, path_1.join)(__dirname, "..", "events"), true);
+        if (this.ops.helpCommand)
+            this.fold.makers.push((new this.ops.helpCommand(this)).__start__());
         await super.connect();
         if (this.ops.autoSync)
             await this.fold.sync();

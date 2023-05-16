@@ -7,6 +7,7 @@ export class Context {
     public params: BaseParam[] | null
     public parent: GroupObject | null
     public args: string[] | null
+    public prefix?: string
     constructor(bot: Erine, data: CommandInteraction | Message) {
         this.bot = bot
         this.data = data

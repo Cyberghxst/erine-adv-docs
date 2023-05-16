@@ -1,4 +1,4 @@
-import { Event, Context, Interaction, InteractionTypes, CommandInteraction, ApplicationCommandTypes, Errors, ComponentInteraction, ModalSubmitInteraction, ApplicationCommandInteractionData } from "../main";
+import { Event, Interaction, InteractionTypes, CommandInteraction, ApplicationCommandTypes, Errors, ComponentInteraction, ModalSubmitInteraction, ApplicationCommandInteractionData } from "../main";
 import { isPromise } from "util/types";
 import { Maker } from "../classes/Maker";
 

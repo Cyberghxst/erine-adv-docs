@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ParamType = exports.Param = exports.Plugins = exports.Errors = exports.Context = exports.Group = exports.Core = exports.Event = exports.ContextMenu = exports.Dispatch = exports.Command = exports.Fold = exports.Erine = exports.Maker = exports.Collectors = exports.Builders = exports.Bucket = void 0;
+exports.HelpCommand = exports.ParamType = exports.Param = exports.Plugins = exports.Errors = exports.Context = exports.Group = exports.Core = exports.Event = exports.ContextMenu = exports.Dispatch = exports.Command = exports.Fold = exports.Erine = exports.Maker = exports.Collectors = exports.Builders = exports.Bucket = void 0;
 const tslib_1 = require("tslib");
 const Collectors = tslib_1.__importStar(require("oceanic-collectors"));
 exports.Collectors = Collectors;
@@ -29,6 +29,8 @@ Object.defineProperty(exports, "Maker", { enumerable: true, get: function () { r
 const ParamsMacro_1 = require("./decorators/ParamsMacro");
 Object.defineProperty(exports, "Param", { enumerable: true, get: function () { return ParamsMacro_1.Param; } });
 Object.defineProperty(exports, "ParamType", { enumerable: true, get: function () { return ParamsMacro_1.ParamType; } });
+const HelpCommand_1 = require("./classes/HelpCommand");
+Object.defineProperty(exports, "HelpCommand", { enumerable: true, get: function () { return HelpCommand_1.HelpCommand; } });
 const Errors = tslib_1.__importStar(require("./classes/Errors"));
 exports.Errors = Errors;
 const Plugins = tslib_1.__importStar(require("./decorators/PluginsMacro"));
@@ -41,4 +43,4 @@ var Bucket;
     Bucket["Channel"] = "CHANNEL";
 })(Bucket = exports.Bucket || (exports.Bucket = {}));
 tslib_1.__exportStar(require("oceanic.js"), exports);
-exports.default = { Builders, Collectors, Erine: Bot_1.Erine, Fold: Fold_1.Fold, Command: CommandMacro_1.Command, Dispatch: InteractionMacro_1.Dispatch, ContextMenu: ContextMenuMacro_1.ContextMenu, Event: EventMacro_1.Event, Core: Core_1.Core, Group: GroupMacro_1.Group, Context: Context_1.Context, Errors, Plugins, Maker: Maker_1.Maker };
+exports.default = { ParamType: ParamsMacro_1.ParamType, Param: ParamsMacro_1.Param, Builders, Collectors, Erine: Bot_1.Erine, Fold: Fold_1.Fold, Command: CommandMacro_1.Command, HelpCommand: HelpCommand_1.HelpCommand, Dispatch: InteractionMacro_1.Dispatch, ContextMenu: ContextMenuMacro_1.ContextMenu, Event: EventMacro_1.Event, Core: Core_1.Core, Group: GroupMacro_1.Group, Context: Context_1.Context, Errors, Plugins, Maker: Maker_1.Maker };
