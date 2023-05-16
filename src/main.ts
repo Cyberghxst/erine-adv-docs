@@ -1,6 +1,7 @@
 import { ApplicationCommandTypes, ClientEvents } from 'oceanic.js';
 import * as Collectors from 'oceanic-collectors'
 import * as Builders from '@oceanicjs/builders'
+import { Cooldowns } from './classes/Cooldowns';
 import { Erine } from './classes/Bot';
 import { Command, CommandOptions } from './decorators/CommandMacro';
 import { Group } from './decorators/GroupMacro';
@@ -65,5 +66,5 @@ export type SyncFunction<S, T> = (args: S) => T
 export type Plugin = AsyncFunction<Context, boolean> | SyncFunction<Context, boolean> | Promise<(ctx: Context) => Promise<boolean>>
 
 export * from 'oceanic.js';
-export { Builders, Collectors, Maker, BaseParam, ChannelParam, NumberParam, StringParam, CommandOptions, Erine, Fold, Command, Dispatch, ContextMenu, Event, Core, Group, Context, Errors, Plugins, Param, TypeOfParam, ParamType, HelpCommand, GroupHelpingObject, CommandHelpingObject }
-export default { ParamType, Param, Builders, Collectors, Erine, Fold, Command, HelpCommand, Dispatch, ContextMenu, Event, Core, Group, Context, Errors, Plugins, Maker }
+export { Cooldowns, Builders, Collectors, Maker, BaseParam, ChannelParam, NumberParam, StringParam, CommandOptions, Erine, Fold, Command, Dispatch, ContextMenu, Event, Core, Group, Context, Errors, Plugins, Param, TypeOfParam, ParamType, HelpCommand, GroupHelpingObject, CommandHelpingObject }
+export default { Cooldowns, ParamType, Param, Builders, Collectors, Erine, Fold, Command, HelpCommand, Dispatch, ContextMenu, Event, Core, Group, Context, Errors, Plugins, Maker }

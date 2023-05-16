@@ -11,9 +11,11 @@ class Erine extends oceanic_js_1.Client {
     ops;
     core;
     fold;
+    cooldowns;
     constructor(options) {
         super(options);
         this.ops = options;
+        this.cooldowns = new main_1.Cooldowns(this);
         this.fold = new main_1.Fold(this);
         this.core = new main_1.Core(this);
     }

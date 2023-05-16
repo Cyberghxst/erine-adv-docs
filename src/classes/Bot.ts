@@ -1,4 +1,4 @@
-import { Events, Fold, Core, Context, HelpCommand } from "../main";
+import { Events, Fold, Core, Context, HelpCommand, Cooldowns } from "../main";
 import { Client, ClientOptions, CommandInteraction, Message } from "oceanic.js";
 import { join } from "path";
 
@@ -18,9 +18,11 @@ export class Erine extends Client<Events>{
     public readonly ops: SetupOptions;
     public core: Core;
     public fold: Fold;
+    public cooldowns: Cooldowns
     constructor(options: SetupOptions) {
         super(options)
         this.ops = options
+        this.cooldowns = new Cooldowns(this)
         this.fold = new Fold(this)
         this.core = new Core(this)
         

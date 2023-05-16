@@ -127,10 +127,10 @@ class InvalidParamAttachment {
 
 class MissingPermission {
     public ctx: Context
-    public permissions: PermissionName
-    constructor(context: Context, perm: PermissionName) {
+    public permissions: PermissionName[]
+    constructor(context: Context, perms: PermissionName[]) {
         this.ctx = context
-        this.permissions = perm
+        this.permissions = perms
     }
 }
 
@@ -147,10 +147,10 @@ class MissingChannelPermission {
 
 class MissingBotPermission {
     public ctx: Context
-    public permissions: PermissionName
-    constructor(context: Context, perm: PermissionName) {
+    public permissions: PermissionName[]
+    constructor(context: Context, perms: PermissionName[]) {
         this.ctx = context
-        this.permissions = perm
+        this.permissions = perms
     }
 }
 
