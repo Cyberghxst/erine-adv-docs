@@ -17,6 +17,7 @@ export class Maker {
     __start__() {
         for(const key of Object.getOwnPropertyNames(Object.getPrototypeOf(this))) {
             const descriptor = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this), key)
+            console.log(descriptor?.value)
             if(!descriptor || typeof descriptor.value !== "function" || !descriptor.value.__type__) continue;
             if(descriptor.value.__type__ === "command") {
                 const COMMAND: CommandObject = {

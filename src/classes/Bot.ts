@@ -3,7 +3,7 @@ import { Client, ClientOptions, CommandInteraction, Message } from "oceanic.js";
 import { join } from "path";
 
 export interface SetupOptions extends ClientOptions {
-    prefix: string | ((ctx: any) => Promise<string> | string)
+    prefix: string | ((ctx: Context) => Promise<string> | string)
     owners?: string[]
     guildOnly?: boolean
     helpCommand?: typeof HelpCommand
@@ -11,7 +11,7 @@ export interface SetupOptions extends ClientOptions {
     autoSync?: boolean
 }
 
-export class Erine extends Client<Events>{ 
+export class Erine<L extends Events = Events> extends Client<L> { 
     /**
      * Setup the bot class with options.
      */
