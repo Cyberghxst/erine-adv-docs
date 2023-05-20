@@ -136,11 +136,11 @@ class MissingPermission {
 
 class MissingChannelPermission {
     public ctx: Context
-    public permissions: PermissionName
+    public permissions: PermissionName[]
     public channel: Channel
-    constructor(context: Context, perm: PermissionName, channel: Channel) {
+    constructor(context: Context, perms: PermissionName[], channel: Channel) {
         this.ctx = context
-        this.permissions = perm
+        this.permissions = perms
         this.channel = channel
     }
 }
@@ -156,11 +156,11 @@ class MissingBotPermission {
 
 class MissingBotChannelPermission {
     public ctx: Context
-    public permissions: PermissionName
+    public permissions: PermissionName[]
     public channel: Channel
-    constructor(context: Context, perm: PermissionName, channel: Channel) {
+    constructor(context: Context, perms: PermissionName[], channel: Channel) {
         this.ctx = context
-        this.permissions = perm
+        this.permissions = perms
         this.channel = channel
     }
 }
