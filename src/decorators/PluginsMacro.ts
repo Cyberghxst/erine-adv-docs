@@ -22,8 +22,15 @@ export function isInChannelType(...types: ChannelTypes[]) {
 export function isNSFW(target: any, key: string, descriptor: PropertyDescriptor) {
     if(!descriptor.value.__plugins__) descriptor.value.__plugins__ = []
     descriptor.value.__plugins__.push(async function(ctx: Context) {
+<<<<<<< HEAD
         if((ctx.channel as TextChannel).nsfw) throw new Errors.NotNSFW(ctx)
         else return false;
+=======
+        if(!(ctx.channel as TextChannel).nsfw) {
+            ctx.bot.emit('commandError', new Errors.NotNSFW(ctx))
+            return false
+        } else return true;
+>>>>>>> 7d2142776271cea10d00bc7b6aad00fe659572af
     })
 }
 

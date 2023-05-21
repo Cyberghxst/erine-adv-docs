@@ -150,12 +150,12 @@ class MissingPermission extends Error {
 
 class MissingChannelPermission extends Error {
     public ctx: Context
-    public permissions: PermissionName
+    public permissions: PermissionName[]
     public channel: Channel
-    constructor(context: Context, perm: PermissionName, channel: Channel) {
+    constructor(context: Context, perms: PermissionName[], channel: Channel) {
         super("The command author doesn't have permissions enough in a channel to execute this command.")
         this.ctx = context
-        this.permissions = perm
+        this.permissions = perms
         this.channel = channel
     }
 }
@@ -172,12 +172,12 @@ class MissingBotPermission extends Error {
 
 class MissingBotChannelPermission extends Error {
     public ctx: Context
-    public permissions: PermissionName
+    public permissions: PermissionName[]
     public channel: Channel
-    constructor(context: Context, perm: PermissionName, channel: Channel) {
+    constructor(context: Context, perms: PermissionName[], channel: Channel) {
         super("I don't have permissions enough in that channel to execute this command.")
         this.ctx = context
-        this.permissions = perm
+        this.permissions = perms
         this.channel = channel
     }
 }

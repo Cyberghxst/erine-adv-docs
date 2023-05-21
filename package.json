@@ -1,17 +1,27 @@
 {
   "name": "erine",
-  "version": "3.3.0-dev",
+  "version": "3.4.0-dev",
   "description": "An advanced OceanicJS-based command framework to create your Discord bots with ease.",
   "types": "sand/main.d.ts",
   "main": "sand/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ts-node src/tests/main.ts"
   },
-  "keywords": ["discordpy", "discord", "discordjs", "decorators"],
+  "contributors": [
+    "Cyberghxst",
+    "Mid"
+  ],
+  "keywords": [
+    "discordpy",
+    "discord",
+    "discordjs",
+    "decorators"
+  ],
   "author": "Cyberghxst",
   "license": "ISC",
   "devDependencies": {
     "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.0.3"
   },
   "dependencies": {
