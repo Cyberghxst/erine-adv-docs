@@ -7,7 +7,7 @@ class MessageHandler extends Maker {
     async messageCreate(message: Message) {
         if(message.author.bot) return
         let ctx = this.bot.getContext(message)
-        if(this.bot.ops.guildOnly && !message.guild) return this.bot.emit("commandError", new Errors.GuildOnly(ctx))
+        if(this.bot.ops.guildOnly && !message.guild) throw new Errors.GuildOnly(ctx)
         let prefix: string;
         if(typeof this.bot.ops.prefix === 'string') prefix = this.bot.ops.prefix
         else {
@@ -23,8 +23,8 @@ class MessageHandler extends Maker {
         if(!probably) return
         let command = this.bot.fold.getAllCommands().find(c => !c.group && (c.name.toLowerCase() == probably || c.aliases.includes(probably!) && c.allowed.includes("prefix")))
         let subcommand = this.bot.fold.getAllCommands().find(c => c.group && (c.group.name.toLowerCase() == probably || c.group.aliases?.map(s=>s.toLowerCase())?.includes(probably!)) && (c.name == argsForSub[0]?.toLowerCase() || c.aliases.map(s=>s.toLowerCase()).includes(argsForSub[0]?.toLowerCase())) && c.allowed.includes("prefix")) || this.bot.fold.getAllCommands().find(c => c.group && (c.group.name == probably || c.group.aliases?.map(s=>s.toLowerCase())?.includes(probably!)) && c.group.fallback && c.allowed.includes("prefix"))
-        if(command) this.runCommand(ctx, command, args).catch(e => this.bot.emit("commandError", new Errors.UnknownCommandError(ctx, e)))
-        if(subcommand) this.runCommand(ctx, subcommand, subcommand.group!.fallback && subcommand.name !== argsForSub[0]?.toLowerCase() ? argsForSub: argsForSub.slice(1)).catch(e => this.bot.emit("commandError", new Errors.UnknownCommandError(ctx, e)))
+        if(command) this.runCommand(ctx, command, args)
+        if(subcommand) this.runCommand(ctx, subcommand, subcommand.group!.fallback && subcommand.name !== argsForSub[0]?.toLowerCase() ? argsForSub: argsForSub.slice(1))
     }
 
     async runCommand(ctx: Context, command: CommandObject, args: string[]) {
@@ -42,7 +42,7 @@ class MessageHandler extends Maker {
         }
         if(command.params.length) {
             let missing = command.params.filter(x => x.type != ApplicationCommandOptionTypes.ATTACHMENT)?.find((x, i) => !args[i] && x.required)
-            if(missing) return this.bot.emit("commandError", new Errors.MissingRequiredParam(ctx, missing))
+            if(missing) throw new Errors.MissingRequiredParam(ctx, missing)
             let types = command.params.map(x => x.type)
             let argi = 0
             for(let i = 0; i < types.length; i++) {
@@ -57,11 +57,7 @@ class MessageHandler extends Maker {
             ctx.params = command.params
         }
         ctx.args = args
-        try {
-            command.maker[command.key](ctx).catch((e: any) => this.bot.emit("commandError", new Errors.UnknownCommandError(ctx, e)))
-        } catch(e) {
-            this.bot.emit("commandError", new Errors.UnknownCommandError(ctx, e))
-        }
+        command.maker[command.key](ctx)
     }
 
     splitArgs(text: string) {

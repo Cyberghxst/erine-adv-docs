@@ -1,4 +1,4 @@
-import { Events, Fold, Core, Context, HelpCommand, Cooldowns } from "../main";
+import { Events, Fold, Core, Context, HelpCommand, Cooldowns, Errors } from "../main";
 import { Client, ClientOptions, CommandInteraction, Message } from "oceanic.js";
 import { join } from "path";
 
@@ -47,6 +47,11 @@ export class Erine<L extends Events = Events> extends Client<L> {
      * Starts the erine client
      */
     async connect() {
+        process.on("uncaughtException", e => {
+            // @ts-ignore
+            if(Object.keys(Errors).some(k => e instanceof Errors[k]) && this.listeners("commandError").length) this.emit("commandError", e)
+            else throw e
+        })
         await this.load(join(__dirname, "..", "events"), true);
         if(this.ops.helpCommand) this.fold.makers.push((new this.ops.helpCommand(this)).__start__())
         await super.connect()

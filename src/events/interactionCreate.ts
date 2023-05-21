@@ -11,7 +11,7 @@ class InteractionHandler extends Maker {
                     case ApplicationCommandTypes.CHAT_INPUT: {
                         let int = interaction as CommandInteraction
                         let ctx = this.bot.getContext(int)
-                        if(this.bot.ops.guildOnly && !int.guild) return this.bot.emit("commandError", new Errors.GuildOnly(ctx))
+                        if(this.bot.ops.guildOnly && !int.guild) throw new Errors.GuildOnly(ctx)
                         let command = this.bot.fold.getAllCommands().find(c => c.name == int.data.name && c.allowed.includes("slash"))
                         if(command && command.plugins.length) {
                             for(const plugin of command.plugins) {
@@ -32,32 +32,21 @@ class InteractionHandler extends Maker {
                                 }
                             }
                         }
-                        try {
-                            if(command) command.maker[command.key](ctx).catch((e: any) => this.bot.emit("commandError", new Errors.UnknownCommandError(ctx, e)))
-                            if(subcommand) subcommand.maker[subcommand.key](ctx).catch((e: any) => this.bot.emit("commandError", new Errors.UnknownCommandError(ctx, e)))
-                        } catch(e) {
-                            this.bot.emit("commandError", new Errors.UnknownCommandError(ctx, e))
-                        }
+                        if(command) command.maker[command.key](ctx)
+                        if(subcommand) subcommand.maker[subcommand.key](ctx)
                         break;
                     }
                     case ApplicationCommandTypes.USER: {
                         let int = this.bot.fold.getAllContexts().find(i => i.name === (interaction as any).data.name)
                         if(!int) return
-                        try {
-                            int.maker[int.name](interaction).catch(console.log)
-                        } catch(e) {
-                            console.log(e)
-                        }
+                        int.maker[int.name](interaction)
                         break;
                     }
                     case ApplicationCommandTypes.MESSAGE: {
                         let int = this.bot.fold.getAllContexts().find(i => i.name === (interaction as unknown as ApplicationCommandInteractionData).name)
                         if(!int) return
-                        try {
-                            int.maker[int.name](interaction).catch(console.log)
-                        } catch(e) {
-                            console.log(e)
-                        }
+                        
+                        int.maker[int.name](interaction)
                         break;
                     }
                 }
@@ -66,21 +55,13 @@ class InteractionHandler extends Maker {
             case InteractionTypes.MESSAGE_COMPONENT: {
                 let int = this.bot.fold.getAllInteractions().find(i => i.id === (interaction as ComponentInteraction).data.customID)
                 if(!int) return
-                try {
-                    int.maker[int.id](interaction).catch(console.log)
-                } catch(e) {
-                    console.log(e)
-                }
+                int.maker[int.id](interaction)
                 break;
             }
             case InteractionTypes.MODAL_SUBMIT: {
                 let int = this.bot.fold.getAllInteractions().find(i => i.id === (interaction as ModalSubmitInteraction).data.customID)
                 if(!int) return
-                try {
-                    int.maker[int.id](interaction).catch(console.log)
-                } catch(e) {
-                    console.log(e)
-                }
+                int.maker[int.id](interaction)
                 break;
             }
         } 

@@ -74,35 +74,35 @@ export class Core {
         let choices = param.choices as { name: string, value: string }[]
         if(choices?.length) {
             let found = choices.find(x => x.name.toLowerCase() == input.toLowerCase())
-            if(!found) { ctx.bot.emit("commandError", new Errors.InvalidParamChoice(ctx, param, choices)); return { break: true, value: null } }
+            if(!found) throw new Errors.InvalidParamChoice(ctx, param, choices)
             else return { break: false, value: found.value }
         }
         if(param.type === ApplicationCommandOptionTypes.STRING) return { break: false, value: input }
         else if(param.type === ApplicationCommandOptionTypes.NUMBER) {
-            if(isNaN(Number(input))) { ctx.bot.emit("commandError", new Errors.InvalidParamNumber(ctx, param)); return { break: true, value: null } }
+            if(isNaN(Number(input))) throw new Errors.InvalidParamNumber(ctx, param)
             else return { break: false, value: Number(input) }
         } else if(param.type === ApplicationCommandOptionTypes.BOOLEAN) {
             let b = input.toLowerCase() === "false" ? false: input.toLowerCase() === "true" ? true: null
-            if(b === null) { ctx.bot.emit("commandError", new Errors.InvalidParamBoolean(ctx, param)); return { break: true, value: null } }
+            if(b === null) throw new Errors.InvalidParamBoolean(ctx, param)
             else return { break: false, value: b }
         } else if(param.type === ApplicationCommandOptionTypes.USER) {
             let b = await this.getMember(input, { guild: ctx.guild!, force: true})
-            if(!b) { ctx.bot.emit("commandError", new Errors.InvalidParamMember(ctx, param)); return { break: true, value: null } }
+            if(!b) throw new Errors.InvalidParamMember(ctx, param)
             else return { break: false, value: b }
         } else if(param.type === ApplicationCommandOptionTypes.CHANNEL) {
             let b = await this.getChannel(input, { guild: ctx.guild!, force: true })
-            if(!b) { ctx.bot.emit("commandError", new Errors.InvalidParamChannel(ctx, param)); return { break: true, value: null } }
+            if(!b) throw new Errors.InvalidParamChannel(ctx, param)
             else {
-                if((param as ChannelParam).channel_types && !(param as ChannelParam).channel_types!.includes(b!.type)) { ctx.bot.emit("commandError", new Errors.InvalidChannelType(ctx, param, b!.type, (param as ChannelParam).channel_types!)); return { break: true, value: null }}
+                if((param as ChannelParam).channel_types && !(param as ChannelParam).channel_types!.includes(b!.type)) throw new Errors.InvalidChannelType(ctx, param, b!.type, (param as ChannelParam).channel_types!)
                 return { break: false, value: b }
             }
         } else if(param.type === ApplicationCommandOptionTypes.ROLE) {
             let b = await this.getRole(input, { guild: ctx.guild!, force: true })
-            if(!b) { ctx.bot.emit("commandError", new Errors.InvalidParamRole(ctx, param)); return { break: true, value: null } }
+            if(!b) throw new Errors.InvalidParamRole(ctx, param)
             else return { break: false, value: b }
         } else if(param.type === ApplicationCommandOptionTypes.ATTACHMENT) {
             let att = ctx.message?.attachments?.first()
-            if(!att && param.required) { ctx.bot.emit("commandError", new Errors.InvalidParamAttachment(ctx, param)); return {break: true, value: null} }
+            if(!att && param.required) throw new Errors.InvalidParamAttachment(ctx, param)
             else return { break: false, value: att }
         }
         return { break: false, value: null }

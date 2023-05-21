@@ -39,6 +39,13 @@ class Erine extends oceanic_js_1.Client {
      * Starts the erine client
      */
     async connect() {
+        process.on("uncaughtException", e => {
+            // @ts-ignore
+            if (Object.keys(main_1.Errors).some(k => e instanceof main_1.Errors[k]) && this.listeners("commandError").length)
+                this.emit("commandError", e);
+            else
+                throw e;
+        });
         await this.load((0, path_1.join)(__dirname, "..", "events"), true);
         if (this.ops.helpCommand)
             this.fold.makers.push((new this.ops.helpCommand(this)).__start__());
