@@ -19,10 +19,6 @@ import * as Plugins from './decorators/PluginsMacro';
 
 export type AnyError = Errors.InvalidParam | Errors.GuildOnly | Errors.NotOwner | Errors.CommandNotFound | Errors.UnknownCommandError | Errors.MissingRequiredParam | Errors.InvalidParamNumber | Errors.InvalidParamChoice | Errors.MissingPermission | Errors.MissingChannelPermission | Errors.MissingBotPermission | Errors.MissingBotChannelPermission | Errors.InvalidParamBoolean | Errors.InvalidParamMember | Errors.InvalidParamChannel | Errors.InvalidParamRole | Errors.InvalidChannelType | Errors.InvalidParamAttachment | Errors.NotNSFW | Errors.NotInChannelType | Errors.OnlyForIDs | Errors.CommandInCooldown;
 
-export interface Events extends ClientEvents {
-    commandError: [error: AnyError]
-}
-
 export interface GroupObject {
     name: string
     description?: string

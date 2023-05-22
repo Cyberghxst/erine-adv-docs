@@ -14,17 +14,20 @@ export class HelpCommand extends Maker {
 
     @Command({ description: "Shows this command", aliases: ["h"] })
     @Param(3, { name: "query", "description": "An optional command/group/subcommand name", required: false, ellipsis: true })
-    async help(ctx: Context) {
+    async help(ctx: Context): Promise<any> {
         if(!ctx.get<string>("query")) return this.sendEmptyHelp(ctx)
         let command = this.getCommand(ctx.get<string>("query")!)
         if(command) return this.sendCommandHelp(ctx, command)
         let group = this.getGroup(ctx.get<string>("query")!)
         if(group) return this.sendGroupHelp(ctx, group)
-        else return await ctx.send("I was unable to find something related to that!")
+        else return this.sendNotFound(ctx)
     }
 
     codeblock(text: string) {
         return `\`\`\`\n${text.slice(0, 1990)}\`\`\``
+    }
+    async sendNotFound(ctx: Context) {
+        await ctx.send("I was unable to find something related to that!")
     }
     async sendEmptyHelp(ctx: Context) {
         await ctx.send(this.codeblock(`Welcome to ${ctx.bot.user.username}'s help, these are my commands:\n` + this.getWalkCommands().map(c => `${c.full || c.name} :: ${c.description}`).join("\n").slice(0, 1990)))

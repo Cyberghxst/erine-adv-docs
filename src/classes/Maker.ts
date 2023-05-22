@@ -1,4 +1,4 @@
-import { Erine, Events, CommandObject, InteractionObject, ContextMenuObject } from "../main";
+import { Erine, ClientEvents, CommandObject, InteractionObject, ContextMenuObject } from "../main";
 
 export class Maker {
     public bot: Erine
@@ -35,7 +35,7 @@ export class Maker {
                 }
                 this.commands.push(COMMAND)
             } else if(descriptor.value.__type__ === "event") {
-                this.bot.on(key as keyof Events, (...args) => descriptor.value.call(this, ...args))
+                this.bot.on(key as keyof ClientEvents, (...args) => descriptor.value.call(this, ...args))
             } else if(descriptor.value.__type__ === "interaction") {
                 this.interactions.push({ id: key, maker: this })
             } else if(descriptor.value.__type__ === "context") {

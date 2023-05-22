@@ -41,8 +41,8 @@ class Erine extends oceanic_js_1.Client {
     async connect() {
         process.on("uncaughtException", e => {
             // @ts-ignore
-            if (Object.keys(main_1.Errors).some(k => e instanceof main_1.Errors[k]) && this.listeners("commandError").length)
-                this.emit("commandError", e);
+            if (Object.keys(main_1.Errors).some(k => e instanceof main_1.Errors[k]) && this.listeners("error").length)
+                this.emit("error", e);
             else
                 throw e;
         });

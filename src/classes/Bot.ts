@@ -1,4 +1,4 @@
-import { Events, Fold, Core, Context, HelpCommand, Cooldowns, Errors } from "../main";
+import { ClientEvents, Fold, Core, Context, HelpCommand, Cooldowns, Errors } from "../main";
 import { Client, ClientOptions, CommandInteraction, Message } from "oceanic.js";
 import { join } from "path";
 
@@ -11,7 +11,7 @@ export interface SetupOptions extends ClientOptions {
     autoSync?: boolean
 }
 
-export class Erine<L extends Events = Events> extends Client<L> { 
+export class Erine<L extends ClientEvents = ClientEvents> extends Client<L> { 
     /**
      * Setup the bot class with options.
      */
@@ -49,7 +49,7 @@ export class Erine<L extends Events = Events> extends Client<L> {
     async connect() {
         process.on("uncaughtException", e => {
             // @ts-ignore
-            if(Object.keys(Errors).some(k => e instanceof Errors[k]) && this.listeners("commandError").length) this.emit("commandError", e)
+            if(Object.keys(Errors).some(k => e instanceof Errors[k]) && this.listeners("error").length) this.emit("error", e)
             else throw e
         })
         await this.load(join(__dirname, "..", "events"), true);
