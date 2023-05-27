@@ -3,6 +3,10 @@ core
 pnpm-lock.yaml
 node_modules
 sand
+src
+.npmignore
+tsconfig.json
+package.json
 src/tests
 package-lock.json
 tsconfig.tsbuildinfo
