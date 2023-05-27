@@ -5,7 +5,8 @@
   "types": "sand/main.d.ts",
   "main": "sand/main.js",
   "scripts": {
-    "test": "ts-node src/tests/main.ts"
+    "test": "ts-node src/tests/main.ts",
+    "build:docs": "typedoc --entryPointStrategy expand ./src/main.ts --out docs"
   },
   "contributors": [
     "Cyberghxst",
@@ -22,6 +23,7 @@
   "devDependencies": {
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
+    "typedoc": "^0.24.7",
     "typescript": "^5.0.3"
   },
   "dependencies": {
